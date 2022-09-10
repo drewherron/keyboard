@@ -17,6 +17,8 @@
 //         </variant>
 //       </configItem>
 //     </layout>
+//
+// /etc/default/keyboard to edit default layout
 
 partial alphanumeric_keys
 xkb_symbols "colemak-dh" {
