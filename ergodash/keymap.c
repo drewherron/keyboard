@@ -4,9 +4,8 @@
 enum layer_names {
     _QWERTY,
     _COLEMAK,
-    _LAYOUT3,
-    _LAYOUT4,
-    _LAYOUT5,
+    _QWERTY_M,
+    _COLEMAK_M,
     _NUMS,
     _LOWER,
     _RAISE,
@@ -16,9 +15,8 @@ enum layer_names {
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   COLEMAK,
-  LAYOUT3,
-  LAYOUT4,
-  LAYOUT5,
+  QWERTY_M,
+  COLEMAK_M,
   NUMS,
   LOWER,
   RAISE,
@@ -52,102 +50,77 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Qwerty
    * ,----------------------------------------------------------------------------------------------------------------------.
-   * | Tab  |   1  |   2  |   3  |   4  |   5  | Home |                    | End  |   6  |   7  |   8  |   9  |   0  | PgUp |
+   * | Tab  |   1  |   2  |   3  |   4  |   5  | Caps |                    | Mods |   6  |   7  |   8  |   9  |   0  | PgUp |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * |  `   |   Q  |   W  |   E  |   R  |   T  | Caps |                    | Clmk |   Y  |   U  |   I  |   O  |   P  | PgDn |
+   * |  `   |   Q  |   W  |   E  |   R  |   T  | Home |                    | End  |   Y  |   U  |   I  |   O  |   P  | PgDn |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * | Esc  |   A  |   S  |   D  |   F  |   G  | Pscr |                    | Del  |   H  |   J  |   K  |   L  |   ;  |  "   |
+   * | Esc  |   A  |   S  |   D  |   F  |   G  | Clmk |                    | Del  |   H  |   J  |   K  |   L  |   ;  |  "   |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
    * | Shift|   Z  |   X  |   C  |   V  |   B  | Space|                    | Bksp |   N  |   M  |   ,  |   .  |   /  | Enter|
    * |-------------+------+------+------+------|      |--------------------|      |------+------+------+------+-------------|
-   * | Ctrl |  GUI |  ALt | NUMS |||||||| Lower| Space|                    | Bksp | Raise|||||||| Left | Down |  Up  | Right|
+   * | Ctrl |  GUI |  Alt | NUMS |||||||| Lower| Space|                    | Bksp | Raise|||||||| Left | Down |  Up  | Right|
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_QWERTY] = LAYOUT(
-    KC_TAB,  KC_1,    KC_2,    KC_3,   KC_4,   KC_5,   KC_HOME,                       KC_END,    KC_6,   KC_7,   KC_8,    KC_9,    KC_0,    KC_PGUP,
-    KC_GRV,  KC_Q,    KC_W,    KC_E,   KC_R,   KC_T,   KC_CAPS,                       TG(1),     KC_Y,   KC_U,   KC_I,    KC_O,    KC_P,    KC_PGDN,
-    KC_ESC,  Q_A,     Q_S,     Q_D,    Q_F,    KC_G,   KC_PSCR,                       KC_DEL,    KC_H,   Q_J,    Q_K,     Q_L,     Q_SCLN,  KC_QUOT,
-    KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,   KC_B,   KC_SPC,                        KC_BSPC,   KC_N,   KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
-    KC_LCTL, KC_LGUI, KC_LALT, NUMS,           LOWER,  KC_SPC,  KC_NO,         KC_NO, KC_BSPC,   RAISE,          KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    KC_TAB,  KC_1,    KC_2,    KC_3,   KC_4,   KC_5,  KC_CAPS,                       TG(2),   KC_6,   KC_7,   KC_8,    KC_9,    KC_0,    KC_PGUP,
+    KC_GRV,  KC_Q,    KC_W,    KC_E,   KC_R,   KC_T,  KC_HOME,                       KC_END,  KC_Y,   KC_U,   KC_I,    KC_O,    KC_P,    KC_PGDN,
+    KC_ESC,  KC_A,    KC_S,    KC_D,   KC_F,   KC_G,  TG(1),                         KC_DEL,  KC_H,   KC_J,   KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,   KC_B,  KC_SPC,                        KC_BSPC, KC_N,   KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
+    KC_LCTL, KC_LGUI, KC_LALT, NUMS,           LOWER, KC_SPC,  KC_NO,         KC_NO, KC_BSPC, RAISE,          KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
   ),
 
   /* Colemak-DH
    * ,----------------------------------------------------------------------------------------------------------------------.
-   * | Tab  |   1  |   2  |   3  |   4  |   5  | Home |                    | End  |   6  |   7  |   8  |   9  |   0  | PgUp |
+   * | Tab  |   1  |   2  |   3  |   4  |   5  | Caps |                    | Mods |   6  |   7  |   8  |   9  |   0  | PgUp |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * |  `   |   Q  |   W  |   F  |   P  |   B  | Caps |                    | Qwty |   J  |   L  |   U  |   P  |   ;  | PgDn |
+   * |  `   |   Q  |   W  |   F  |   P  |   B  | Home |                    | End  |   J  |   L  |   U  |   P  |   ;  | PgDn |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * | Esc  |   A  |   R  |   S  |   T  |   G  | Pscr |                    | Del  |   M  |   N  |   E  |   I  |   O  |  "   |
+   * | Esc  |   A  |   R  |   S  |   T  |   G  | Qwty |                    | Del  |   M  |   N  |   E  |   I  |   O  |  "   |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
    * | Shift|   Z  |   X  |   C  |   D  |   V  | Space|                    | Bksp |   K  |   H  |   ,  |   .  |   /  | Enter|
    * |-------------+------+------+------+------|      |--------------------|      |------+------+------+------+-------------|
-   * | Ctrl |  GUI |  ALt | NUMS |||||||| Lower| Space|                    | Bksp | Raise|||||||| Left | Down |  Up  | Right|
+   * | Ctrl |  GUI |  Alt | NUMS |||||||| Lower| Space|                    | Bksp | Raise|||||||| Left | Down |  Up  | Right|
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_COLEMAK] = LAYOUT(
-    KC_TAB,  KC_1,    KC_2,    KC_3,   KC_4,   KC_5,   KC_HOME,                       KC_END,    KC_6,   KC_7,   KC_8,    KC_9,    KC_0,    KC_PGUP,
-    KC_GRV,  KC_Q,    KC_W,    KC_F,   KC_P,   KC_B,   KC_CAPS,                       TG(0),     KC_J,   KC_L,   KC_U,    KC_P,    KC_SCLN  KC_PGDN,
-    KC_ESC,  C_A,     C_R,     C_S,    C_T,    KC_G,   KC_PSCR,                       KC_DEL,    KC_M,   C_N,    C_E,     C_I,     C_O,     KC_QUOT,
-    KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_D,   KC_V,   KC_SPC,                        KC_BSPC,   KC_K,   KC_H,   KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
-    KC_LCTL, KC_LGUI, KC_LALT, NUMS,           LOWER,  KC_SPC,  KC_NO,         KC_NO, KC_BSPC,   RAISE,          KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    KC_TAB,  KC_1,    KC_2,    KC_3,   KC_4,   KC_5,  KC_CAPS,                       TG(3),   KC_6,   KC_7,   KC_8,    KC_9,    KC_0,    KC_PGUP,
+    KC_GRV,  KC_Q,    KC_W,    KC_F,   KC_P,   KC_B,  KC_HOME,                       KC_END,  KC_J,   KC_L,   KC_U,    KC_P,    KC_SCLN  KC_PGDN,
+    KC_ESC,  KC_A,    KC_R,    KC_S,   KC_T,   KC_G,  TG(0),                         KC_DEL,  KC_M,   KC_N,   KC_E,    KC_I,    KC_O,    KC_QUOT,
+    KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_D,   KC_V,  KC_SPC,                        KC_BSPC, KC_K,   KC_H,   KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
+    KC_LCTL, KC_LGUI, KC_LALT, NUMS,           LOWER, KC_SPC,  KC_NO,         KC_NO, KC_BSPC, RAISE,          KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
   ),
 
-  /* Qwerty
-   * ,----------------------------------------------------------------------------------------------------------------------.
-   * | Tab  |   1  |   2  |   3  |   4  |   5  | Home |                    | End  |   6  |   7  |   8  |   9  |   0  | PgUp |
-   * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * |  `   |   Q  |   W  |   E  |   R  |   T  | Caps |                    | Clmk |   Y  |   U  |   I  |   O  |   P  | PgDn |
-   * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * | Esc  |   A  |   S  |   D  |   F  |   G  | Pscr |                    | Del  |   H  |   J  |   K  |   L  |   ;  |  "   |
-   * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
-   * | Shift|   Z  |   X  |   C  |   V  |   B  | Space|                    | Bksp |   N  |   M  |   ,  |   .  |   /  | Enter|
-   * |-------------+------+------+------+------|      |--------------------|      |------+------+------+------+-------------|
-   * | Ctrl |  GUI |  ALt | NUMS |||||||| Lower| Space|                    | Bksp | Raise|||||||| Left | Down |  Up  | Right|
-   * ,----------------------------------------------------------------------------------------------------------------------.
+  /* The next two layers are identical but with home row modifier keys
    */
-  [_QWERTY] = LAYOUT(
-    KC_TAB,  KC_1,    KC_2,    KC_3,   KC_4,   KC_5,   KC_HOME,                       KC_END,    KC_6,   KC_7,   KC_8,    KC_9,    KC_0,    KC_PGUP,
-    KC_GRV,  KC_Q,    KC_W,    KC_E,   KC_R,   KC_T,   KC_CAPS,                       TG(1),     KC_Y,   KC_U,   KC_I,    KC_O,    KC_P,    KC_PGDN,
-    KC_ESC,  Q_A,     Q_S,     Q_D,    Q_F,    KC_G,   KC_PSCR,                       KC_DEL,    KC_H,   Q_J,    Q_K,     Q_L,     Q_SCLN,  KC_QUOT,
-    KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,   KC_B,   KC_SPC,                        KC_BSPC,   KC_N,   KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
-    KC_LCTL, KC_LGUI, KC_LALT, NUMS,           LOWER,  KC_SPC,  KC_NO,         KC_NO, KC_BSPC,   RAISE,          KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+  [_QWERTY_M] = LAYOUT(
+    KC_TAB,  KC_1,    KC_2,    KC_3, KC_4, KC_5,  KC_CAPS,                       TG(0),   KC_6,   KC_7, KC_8,    KC_9,    KC_0,    KC_PGUP,
+    KC_GRV,  KC_Q,    KC_W,    KC_E, KC_R, KC_T,  KC_HOME,                       KC_END,  KC_Y,   KC_U, KC_I,    KC_O,    KC_P,    KC_PGDN,
+    KC_ESC,  Q_A,     Q_S,     Q_D,  Q_F,  KC_G,  TG(3),                         KC_DEL,  KC_H,   Q_J,  Q_K,     Q_L,     Q_SCLN,  KC_QUOT,
+    KC_LSFT, KC_Z,    KC_X,    KC_C, KC_V, KC_B,  KC_SPC,                        KC_BSPC, KC_N,   KC_M, KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
+    KC_LCTL, KC_LGUI, KC_LALT, NUMS,       LOWER, KC_SPC,  KC_NO,         KC_NO, KC_BSPC, RAISE,        KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+  ),
+  [_COLEMAK_M] = LAYOUT(
+    KC_TAB,  KC_1,    KC_2,    KC_3, KC_4, KC_5,  KC_CAPS,                       TG(1),   KC_6,   KC_7, KC_8,    KC_9,    KC_0,    KC_PGUP,
+    KC_GRV,  KC_Q,    KC_W,    KC_F, KC_P, KC_B,  KC_HOME,                       KC_END,  KC_J,   KC_L, KC_U,    KC_P,    KC_SCLN  KC_PGDN,
+    KC_ESC,  C_A,     C_R,     C_S,  C_T,  KC_G,  TG(2),                         KC_DEL,  KC_M,   C_N,  C_E,     C_I,     C_O,     KC_QUOT,
+    KC_LSFT, KC_Z,    KC_X,    KC_C, KC_D, KC_V,  KC_SPC,                        KC_BSPC, KC_K,   KC_H, KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
+    KC_LCTL, KC_LGUI, KC_LALT, NUMS,       LOWER, KC_SPC,  KC_NO,         KC_NO, KC_BSPC, RAISE,        KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
   ),
 
-  /* Qwerty
+  /* Nums
    * ,----------------------------------------------------------------------------------------------------------------------.
-   * | Tab  |   1  |   2  |   3  |   4  |   5  | Home |                    | End  |   6  |   7  |   8  |   9  |   0  | PgUp |
+   * |      |  F1  |  F2  |  F3  |  F4  |      | Home |                    |      |      |      |      |      |      | PgUp |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * |  `   |   Q  |   W  |   E  |   R  |   T  | Caps |                    | Clmk |   Y  |   U  |   I  |   O  |   P  | PgDn |
+   * |      |  F5  |  F6  |  F7  |  F8  |      | Caps |                    |      |      |      |      |      |      | PgDn |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * | Esc  |   A  |   S  |   D  |   F  |   G  | Pscr |                    | Del  |   H  |   J  |   K  |   L  |   ;  |  "   |
+   * |      |  F9  |  F10 |  F11 |  F12 |      | Pscr |                    |      |      |      |      |      |      |      |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
-   * | Shift|   Z  |   X  |   C  |   V  |   B  | Space|                    | Bksp |   N  |   M  |   ,  |   .  |   /  | Enter|
+   * |      |  F13 |  F14 |  F15 |  F16 |      | Space|                    | Bksp |      |      |      |      |      | Enter|
    * |-------------+------+------+------+------|      |--------------------|      |------+------+------+------+-------------|
-   * | Ctrl |  GUI |  ALt | NUMS |||||||| Lower| Space|                    | Bksp | Raise|||||||| Left | Down |  Up  | Right|
+   * | Ctrl |  GUI |  Alt | NUMS |||||||| Lower| Space|                    | Bksp | Raise|||||||| Left | Down |  Up  | Right|
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
-  [_QWERTY] = LAYOUT(
-    KC_TAB,  KC_1,    KC_2,    KC_3,   KC_4,   KC_5,   KC_HOME,                       KC_END,    KC_6,   KC_7,   KC_8,    KC_9,    KC_0,    KC_PGUP,
-    KC_GRV,  KC_Q,    KC_W,    KC_E,   KC_R,   KC_T,   KC_CAPS,                       TG(1),     KC_Y,   KC_U,   KC_I,    KC_O,    KC_P,    KC_PGDN,
-    KC_ESC,  Q_A,     Q_S,     Q_D,    Q_F,    KC_G,   KC_PSCR,                       KC_DEL,    KC_H,   Q_J,    Q_K,     Q_L,     Q_SCLN,  KC_QUOT,
-    KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,   KC_B,   KC_SPC,                        KC_BSPC,   KC_N,   KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
-    KC_LCTL, KC_LGUI, KC_LALT, NUMS,           LOWER,  KC_SPC,  KC_NO,         KC_NO, KC_BSPC,   RAISE,          KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
-  ),
-
-  /* Qwerty
-   * ,----------------------------------------------------------------------------------------------------------------------.
-   * | Tab  |   1  |   2  |   3  |   4  |   5  | Home |                    | End  |   6  |   7  |   8  |   9  |   0  | PgUp |
-   * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * |  `   |   Q  |   W  |   E  |   R  |   T  | Caps |                    | Clmk |   Y  |   U  |   I  |   O  |   P  | PgDn |
-   * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * | Esc  |   A  |   S  |   D  |   F  |   G  | Pscr |                    | Del  |   H  |   J  |   K  |   L  |   ;  |  "   |
-   * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
-   * | Shift|   Z  |   X  |   C  |   V  |   B  | Space|                    | Bksp |   N  |   M  |   ,  |   .  |   /  | Enter|
-   * |-------------+------+------+------+------|      |--------------------|      |------+------+------+------+-------------|
-   * | Ctrl |  GUI |  ALt | NUMS |||||||| Lower| Space|                    | Bksp | Raise|||||||| Left | Down |  Up  | Right|
-   * ,----------------------------------------------------------------------------------------------------------------------.
-   */
-  [_QWERTY] = LAYOUT(
+  [_NUMS] = LAYOUT(
     KC_TAB,  KC_1,    KC_2,    KC_3,   KC_4,   KC_5,   KC_HOME,                       KC_END,    KC_6,   KC_7,   KC_8,    KC_9,    KC_0,    KC_PGUP,
     KC_GRV,  KC_Q,    KC_W,    KC_E,   KC_R,   KC_T,   KC_CAPS,                       TG(1),     KC_Y,   KC_U,   KC_I,    KC_O,    KC_P,    KC_PGDN,
     KC_ESC,  Q_A,     Q_S,     Q_D,    Q_F,    KC_G,   KC_PSCR,                       KC_DEL,    KC_H,   Q_J,    Q_K,     Q_L,     Q_SCLN,  KC_QUOT,
@@ -157,15 +130,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Lower
    * ,----------------------------------------------------------------------------------------------------------------------.
-   * |  F11 |  F1  |  F2  |  F3  |  F4  |  F5  |   {  |                    |   }  |  F6  |  F7  |  F8  |  F9  |  F10 |  F12 |
+   * |      |      |      |      |      |      |      |                    |      |      |      |      |      |      |      |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * |  ~   |   !  |   @  |   #  |   $  |   %  |   _  |                    |   +  |   ^  |   &  |   *  |   (  |   )  |  |   |
+   * |      |      |      |      |      |      |      |                    |      |      |      |      |      |      |      |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * | Tab  |   1  |   2  |   3  |   4  |   5  |  Del |                    | Bksp |   H  |   J  |   K  |   L  |   :  |  "   |
+   * |      |      |      |      |      |      |      |                    |      |      |      |      |      |      |      |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
-   * | Shift|   6  |   7  |   8  |   9  |   0  | Space|                    | Enter|   N  |   M  |   <  |   >  |   ?  | Shift|
-   * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
-   * | Ctrl |  GUI |  ALt | NUMS |||||||| Lower| Space|  Del |||||||| Bksp | Enter| Raise|||||||| Home |PageDn|PageUp|  End |
+   * |      |      |      |      |      |      |      |                    |      |      |      |      |      |      |      |
+   * |-------------+------+------+------+------|      |--------------------|      |------+------+------+------+-------------|
+   * | Ctrl |  GUI |  Alt | NUMS |||||||| Lower| Space|                    | Bksp | Raise|||||||| Left | Down |  Up  | Right|
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_LOWER] = LAYOUT(
