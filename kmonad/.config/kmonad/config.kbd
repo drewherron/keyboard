@@ -19,10 +19,6 @@
   ;; Let unmapped keys pass through to the OS.
   fallthrough true
 
-  ;; We need combos for Shift+Shift toggling:
-  combos true
-  combo-timeout 50   ;; ms
-
   ;; Global tapping-term:
   ;; tapping-term 200
 )
@@ -100,30 +96,11 @@
 ;;; Navigation layer
 ;;;---------------------------------------------------------------------------
 (deflayer navigation
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-
-  _ @to-qwerty @to-colemak-dh _ _ _ _ _ _ _ _ _ _
-
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ @to-qwerty @to-colemak-dh _ _ _ _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _ _ _ _ _
-
-  _ _ _ _ _ _ left down up rght _ _ _
-
-  _  _ _ _ _ _ home pgdn pgup end _ _
-
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _ _
-
   _ _ _
-)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                 Combo for Qwerty <-> Colemak-DH Toggle                     ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Press LShift and RShift together (within combo-timeout) to toggle layout.  ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(combo
-  :layers '(qwerty colemak-dh)
-  :key1 lshift
-  :key2 rshift
-  :then (layer-toggle colemak-dh)
 )
