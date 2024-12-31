@@ -86,7 +86,7 @@
   esc f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 home end del
   grv 1 2 3 4 5 6 7 8 9 0 - = bspc
   tab q w f p b j l u y ; [ ] \
-  caps @ctrl_a @alt_r @meta_s @shift_t g m @shift_n @meta_e @alt_i @ctrl_o ' ret
+  bspc @ctrl_a @alt_r @meta_s @shift_t g m @shift_n @meta_e @alt_i @ctrl_o ' ret
   lsft z x c d v k h , . / rsft
   wkup lctl lmet lalt @nav ralt cmps rctl pgup up pgdn
   left down rght
