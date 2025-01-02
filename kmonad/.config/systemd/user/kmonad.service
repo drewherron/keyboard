@@ -3,7 +3,7 @@ Description=Kmonad Keyboard Remapping
 After=graphical.target
 
 [Service]
-ExecStart=/home/drew/.local/bin/kmonad /home/drew/.config/kmonad/config.kbd
+ExecStart=/home/drew/.local/bin/kmonad /home/drew/.config/kmonad/samc-home.kbd
 Restart=on-failure
 
 [Install]
