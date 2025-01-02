@@ -46,6 +46,7 @@
   to-colemak-dh (layer-switch colemak-dh)
 
   nav (tap-hold 200 space (layer-toggle navigation))
+  num (tap-hold 200 d (layer-toggle numpad))
 
   ;; QWERTY home row
   shift_a       (tap-hold 200 a lsft)
@@ -87,7 +88,7 @@
   grv 1 2 3 4 5 6 7 8 9 0 - = bspc
   tab q w f p b j l u y ; [ ] \
   bspc @shift_a @alt_r @meta_s @ctrl_t g m @ctrl_n @meta_e @alt_i @shift_o ' ret
-  lsft z x c d v k h , . / rsft
+  lsft z x c @num v k h , . / rsft
   wkup lctl lmet lalt @nav ralt cmps rctl pgup up pgdn
   left down rght
 )
@@ -102,5 +103,18 @@
   _ _ _ _ _ _ left down up rght _ _ _
   _ _ _ _ _ _ home pgdn pgup end _ _
   _ _ _ _ _ _ _ _ _ _ _
+  _ _ _
+)
+
+;;;---------------------------------------------------------------------------
+;;; Numpad layer
+;;;---------------------------------------------------------------------------
+(deflayer numpad
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ 7 8 9 _ _ _ _
+  _ _ _ _ _ _ _ 4 5 6 _ _ _
+  _ _ _ _ _ _ _ 1 2 3 _ _
+  _ _ _ _ _ 0 _ _ _ _ _
   _ _ _
 )
