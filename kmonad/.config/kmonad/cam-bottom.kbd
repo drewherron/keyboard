@@ -1,0 +1,108 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;    Drew Herron's kmonad config - https://github.com/drewherron/keyboard    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                            defcfg                                          ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; To find device file, use:
+;; ls -l /dev/input/by-path
+;; or maybe
+;; ls -l /dev/input/by-id
+;; and
+;; cat /proc/bus/input/devices | less
+(defcfg
+  input  (device-file "/dev/input/by-path/platform-i8042-serio-0-event-kbd")
+  output (uinput-sink "KMonad output")
+
+  ;; Let unmapped keys pass through to the OS.
+  fallthrough true
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                            defsrc                                          ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defsrc
+  esc   f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11   f12  home  end  del
+  grv   1    2    3    4    5    6    7    8    9    0    -     =    bspc
+  tab   q    w    e    r    t    y    u    i    o    p    [     ]    \
+  caps  a    s    d    f    g    h    j    k    l    ;    '     ret
+  lsft  z    x    c    v    b    n    m    ,    .    /          rsft
+  wkup  lctl lmet lalt           spc            ralt cmps rctl     pgup up   pgdn
+                                                                   left down rght
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                           defalias                                         ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defalias
+  to-qwerty     (layer-switch qwerty)
+  to-colemak-dh (layer-switch colemak-dh)
+
+  ;; Layers
+  nav (tap-hold 200 space (layer-toggle navigation))
+  num_q (tap-hold 200 v (layer-toggle numpad))
+  num_c (tap-hold 200 d (layer-toggle numpad))
+
+  ;; Bottom row mod keys
+  ctrl_z        (tap-hold 200 z lctl)
+  alt_x         (tap-hold 200 x lalt)
+  meta_c        (tap-hold 200 c lmet)
+  meta_comma    (tap-hold 200 , lmet)
+  alt_dot       (tap-hold 200 . lalt)
+  ctrl_slash    (tap-hold 200 / lctl)
+)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                           deflayer                                         ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deflayer colemak-dh
+  esc f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 home end del
+  grv 1 2 3 4 5 6 7 8 9 0 - = bspc
+  tab q w f p b j l u y ; [ ] \
+  bspc a r s t g m n e i o ' ret
+  lsft @ctrl_z @alt_x @meta_c @num_c v k h @meta_comma @alt_dot @ctrl_slash rsft
+  wkup lctl lmet lalt @nav ralt cmps rctl pgup up pgdn
+  left down rght
+)
+
+(deflayer qwerty
+  esc f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 home end del
+  grv 1 2 3 4 5 6 7 8 9 0 - = bspc
+  tab q w e r t y u i o p [ ] \
+  caps a s d f g h j k l ; ' ret
+  lsft @ctrl_z @alt_x @meta_c @num_q b n m @meta_comma @alt_dot @ctrl_slash rsft
+  wkup lctl lmet lalt @nav ralt cmps rctl pgup up pgdn
+  left down rght
+)
+ 
+;;;---------------------------------------------------------------------------
+;;; Navigation layer
+;;;---------------------------------------------------------------------------
+(deflayer navigation
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ @to-qwerty @to-colemak-dh _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ left down up rght _ _ _
+  _ _ _ _ _ _ home pgdn pgup end _ _
+  _ _ _ _ _ _ _ _ _ _ _
+  _ _ _
+)
+
+;;;---------------------------------------------------------------------------
+;;; Numpad layer
+;;;---------------------------------------------------------------------------
+(deflayer numpad
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ 7 8 9 _ _ _ _
+  _ _ _ _ _ _ _ 4 5 6 _ _ _
+  _ _ _ _ _ _ _ 1 2 3 _ _
+  _ _ _ _ _ 0 _ _ _ _ _
+  _ _ _
+)
