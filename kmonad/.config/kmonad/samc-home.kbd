@@ -18,9 +18,6 @@
 
   ;; Let unmapped keys pass through to the OS.
   fallthrough true
-
-  ;; Global tapping-term:
-  ;; tapping-term 200
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,7 +64,6 @@
   alt_i           (tap-hold 200 i lalt)
   shift_o         (tap-hold 200 o lsft)
 )
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                           deflayer                                         ;;
