@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-# https://github.com/drewherron/keyboard
-#
-# Installs and sets up my kmonad configuration (on Debian)
-# If it's already set up, this will just update kmonad
-# Some bits require sudo, don't run the script as sudo
-# Just run as user and watch for password prompts
+# Installs and sets up KMonad, ensuring /dev/uinput permissions.
+# Safe to run multiple times; updates or skips steps if they're done.
+# Some parts require sudo (don't run entire script under sudo).
 
 set -euo pipefail
 
@@ -18,17 +15,17 @@ UINPUT_RULE="/etc/udev/rules.d/99-uinput.rules"
 
 echo "=== KMonad Setup Script ==="
 
-##########################################################
-# Ensure ~/src and ~/Projects exist
-##########################################################
+###############################################################################
+# 1) Ensure ~/src and ~/Projects exist
+###############################################################################
 echo "1) Checking for $SRC_DIR and $PROJECTS_DIR..."
 mkdir -p "$SRC_DIR"
 mkdir -p "$PROJECTS_DIR"
 echo "   - Confirmed directories exist."
 
-##########################################################
-# Clone or update KMonad
-##########################################################
+###############################################################################
+# 2) Clone or update KMonad
+###############################################################################
 echo "2) Setting up KMonad in $SRC_DIR..."
 cd "$SRC_DIR"
 
@@ -42,16 +39,16 @@ else
   cd kmonad
 fi
 
-##########################################################
-# Build/Install KMonad via stack
-##########################################################
+###############################################################################
+# 3) Build/Install KMonad via stack
+###############################################################################
 echo "3) Building/Installing KMonad (stack install)..."
 stack install
 echo "   - KMonad installed to ~/.local/bin (by default)."
 
-##########################################################
-# Fix /dev/uinput permissions
-##########################################################
+###############################################################################
+# 4) Fix /dev/uinput permissions
+###############################################################################
 echo "4) Checking /dev/uinput permissions..."
 
 # 4a) Ensure 'input' group exists
@@ -74,8 +71,8 @@ fi
 # 4c) Create or update 99-uinput.rules
 if [ -f "$UINPUT_RULE" ]; then
   echo "   - $UINPUT_RULE already exists; leaving it in place."
-  echo "   - If you're still getting permission errors, confirm its contents:"
-  echo "        KERNEL==\"uinput\", SUBSYSTEM==\"misc\", ACTION==\"add\", GROUP=\"input\", MODE=\"0660\""
+  echo "   - If you're still getting permission errors, confirm its contents."
+  echo "     Should be:  KERNEL==\"uinput\", SUBSYSTEM==\"misc\", ACTION==\"add\", GROUP=\"input\", MODE=\"0660\""
 else
   echo "   - Creating $UINPUT_RULE (requires sudo)."
   cat << EOF | sudo tee "$UINPUT_RULE" >/dev/null
@@ -85,11 +82,24 @@ EOF
   sudo udevadm control --reload-rules
   sudo udevadm trigger
 fi
+
+# 4d) Force-remove and reload the 'uinput' kernel module.
+#     This ensures /dev/uinput is recreated with the above rule.
+echo "   - Reloading 'uinput' module to ensure correct device permissions..."
+if sudo modprobe -r uinput 2>/dev/null; then
+  sudo modprobe uinput
+  echo "     /dev/uinput was reloaded. Current permissions:"
+  ls -l /dev/uinput || echo "     Could not find /dev/uinput after reload."
+else
+  echo "     Could not remove 'uinput' (maybe in use?), skipping force reload."
+  echo "     If permissions remain incorrect, reboot or remove the module manually."
+fi
+
 echo "   - /dev/uinput permission checks complete."
 
-##########################################################
-# Clone or update keyboard repo
-##########################################################
+###############################################################################
+# 5) Clone or update keyboard repo
+###############################################################################
 echo "5) Setting up 'keyboard' repo in $PROJECTS_DIR..."
 cd "$PROJECTS_DIR"
 
@@ -103,21 +113,21 @@ else
   cd keyboard
 fi
 
-##########################################################
-# stow kmonad
-##########################################################
+###############################################################################
+# 6) stow kmonad
+###############################################################################
 echo "6) Stowing kmonad dotfiles..."
 if command -v stow >/dev/null; then
   stow kmonad
   echo "   - kmonad stowed successfully."
 else
-  echo "   - ERROR: 'stow' command not found."
+  echo "   - ERROR: 'stow' command not found. Please install it, then re-run."
   exit 1
 fi
 
-##########################################################
-# Reload and enable kmonad.service
-##########################################################
+###############################################################################
+# 7) Reload and enable kmonad.service
+###############################################################################
 echo "7) Refreshing systemd (user) and enabling kmonad.service..."
 systemctl --user daemon-reload || true
 
@@ -129,8 +139,10 @@ else
 fi
 
 echo "   - Starting kmonad.service..."
-systemctl --user start kmonad.service || \
-  echo "   - Could not start kmonad.service (possibly permissions)."
+if ! systemctl --user start kmonad.service; then
+  echo "   - Could not start kmonad.service (possibly /dev/uinput permissions)."
+fi
 
 echo "=== Setup Complete ==="
-echo "You'll need to log out/in for any group changes to apply."
+echo "If you were newly added to the 'input' group, please log out and log back in."
+echo "You may also want to reboot to ensure the 'uinput' rule applies at startup."
