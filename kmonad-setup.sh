@@ -47,55 +47,69 @@ stack install
 echo "   - KMonad installed to ~/.local/bin (by default)."
 
 ###############################################################################
-# 4) Fix /dev/uinput permissions
+# 4) Fix /dev/uinput permissions (Using "uinput" group per KMonad FAQ)
 ###############################################################################
-echo "4) Checking /dev/uinput permissions..."
+echo "4) Setting up /dev/uinput with group 'uinput'..."
 
-# 4a) Ensure 'input' group exists
-if getent group input >/dev/null; then
-  echo "   - 'input' group already exists."
+# Create the uinput group if it doesn't exist
+if getent group uinput >/dev/null; then
+  echo "   - 'uinput' group already exists."
 else
-  echo "   - Creating 'input' group (requires sudo)."
+  echo "   - Creating 'uinput' group (requires sudo)."
+  sudo groupadd uinput
+fi
+
+# Also ensure 'input' group exists if needed
+if ! getent group input >/dev/null; then
+  echo "   - 'input' group does not exist; creating now (requires sudo)."
   sudo groupadd input
 fi
 
-# 4b) Ensure current user is in 'input' group
+# Add current user to both input and uinput
+NEEDS_LOGOUT=false
 if groups "$USER" | grep -q "\binput\b"; then
   echo "   - $USER is already in 'input' group."
 else
   echo "   - Adding $USER to 'input' group (requires sudo)."
   sudo usermod -aG input "$USER"
-  echo "   - NOTE: You must log out and log back in for this to take effect."
+  NEEDS_LOGOUT=true
+fi
+if groups "$USER" | grep -q "\buinput\b"; then
+  echo "   - $USER is already in 'uinput' group."
+else
+  echo "   - Adding $USER to 'uinput' group (requires sudo)."
+  sudo usermod -aG uinput "$USER"
+  NEEDS_LOGOUT=true
+fi
+if $NEEDS_LOGOUT; then
+  echo "   - NOTE: You must log out and log back in for group changes to take effect."
 fi
 
-# 4c) Create or update 99-uinput.rules
+# Create or update 99-uinput.rules
 if [ -f "$UINPUT_RULE" ]; then
   echo "   - $UINPUT_RULE already exists; leaving it in place."
-  echo "   - If you're still getting permission errors, confirm its contents."
-  echo "     Should be:  KERNEL==\"uinput\", SUBSYSTEM==\"misc\", ACTION==\"add\", GROUP=\"input\", MODE=\"0660\""
+  echo "   - If you still get permission errors, confirm it matches the FAQ approach."
 else
   echo "   - Creating $UINPUT_RULE (requires sudo)."
   cat << EOF | sudo tee "$UINPUT_RULE" >/dev/null
-KERNEL=="uinput", SUBSYSTEM=="misc", ACTION=="add", GROUP="input", MODE="0660"
+KERNEL=="uinput", SUBSYSTEM=="misc", ACTION=="add", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
 EOF
   echo "   - Reloading udev rules..."
   sudo udevadm control --reload-rules
   sudo udevadm trigger
 fi
 
-# 4d) Force-remove and reload the 'uinput' kernel module.
-#     This ensures /dev/uinput is recreated with the above rule.
-echo "   - Reloading 'uinput' module to ensure correct device permissions..."
+# Force re-create /dev/uinput so it's under the new rule
+echo "   - Reloading 'uinput' module..."
 if sudo modprobe -r uinput 2>/dev/null; then
   sudo modprobe uinput
-  echo "     /dev/uinput was reloaded. Current permissions:"
-  ls -l /dev/uinput || echo "     Could not find /dev/uinput after reload."
+  echo "     /dev/uinput reloaded. Permissions now:"
+  ls -l /dev/uinput || echo "     Could not locate /dev/uinput."
 else
-  echo "     Could not remove 'uinput' (maybe in use?), skipping force reload."
-  echo "     If permissions remain incorrect, reboot or remove the module manually."
+  echo "     Could not remove 'uinput' (in use?), skipping force reload."
 fi
 
-echo "   - /dev/uinput permission checks complete."
+echo "   - /dev/uinput 'uinput' group setup complete."
 
 ###############################################################################
 # 5) Clone or update keyboard repo
