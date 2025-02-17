@@ -92,7 +92,7 @@ if [ -f "$UINPUT_RULE" ]; then
 else
   echo "   - Creating $UINPUT_RULE (requires sudo)."
   cat << EOF | sudo tee "$UINPUT_RULE" >/dev/null
-KERNEL=="uinput", SUBSYSTEM=="misc", ACTION=="add", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
+KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
 EOF
   echo "   - Reloading udev rules..."
   sudo udevadm control --reload-rules
@@ -100,14 +100,14 @@ EOF
 fi
 
 # Force re-create /dev/uinput so it's under the new rule
-echo "   - Reloading 'uinput' module..."
-if sudo modprobe -r uinput 2>/dev/null; then
-  sudo modprobe uinput
-  echo "     /dev/uinput reloaded. Permissions now:"
-  ls -l /dev/uinput || echo "     Could not locate /dev/uinput."
-else
-  echo "     Could not remove 'uinput' (in use?), skipping force reload."
-fi
+echo "Reloading 'uinput' module to ensure correct device permissions..."
+# Try to remove if possible, but don’t bail if it fails.
+sudo modprobe -r uinput 2>/dev/null || true
+
+# Always attempt to load
+sudo modprobe uinput
+echo "  /dev/uinput reloaded. Current permissions:"
+ls -l /dev/uinput || echo "  Could not locate /dev/uinput."
 
 echo "   - /dev/uinput 'uinput' group setup complete."
 
